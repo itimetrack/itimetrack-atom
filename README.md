@@ -1,3 +1,8 @@
+iTimeTrack plugins are a fork of the WakaTime (http://wakatime.com & https://github.com/wakatime) plugins.
+For support please contact support@itimetrack.com .
+
+Below is the forked README.rst as written by WakaTime.
+
 atom-wakatime
 =============
 
