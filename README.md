@@ -1,5 +1,5 @@
 iTimeTrack plugins are a fork of the WakaTime (http://wakatime.com & https://github.com/wakatime) plugins.
-For support please contact support@itimetrack.com .
+For support please visit http://blog.itimetrack.com/support/.
 
 Below is the forked README.rst as written by WakaTime.
 
