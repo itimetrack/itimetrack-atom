@@ -1,10 +1,10 @@
 {
-  "name": "wakatime",
+  "name": "itimetrack",
   "version": "5.0.8",
-  "description": "Fitbit for programmers. Get automated metrics and insights about your programming.",
+  "description": "iTimeTrack is automated time tracking tool for programmers. Once the iTimeTrack plugin is installed, your billable time worked in files will be assigned to a project then a time-entry will be generated at https://itimetrack.com",
   "license": "BSD",
-  "repository": "https://github.com/wakatime/atom-wakatime",
-  "author": "WakaTime <support@wakatime.com>",
+  "repository": "https://github.com/itimetrack/itimetrack-atom",
+  "author": "Written by WakaTimeCom Supported by iTimeTrack <support@itimetrack.com>",
   "main": "./lib/wakatime",
   "engines": {
     "atom": ">0.50.0"

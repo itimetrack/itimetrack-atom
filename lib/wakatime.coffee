@@ -31,7 +31,7 @@ module.exports =
   config:
     apikey:
       title: 'Api Key'
-      description: 'Your secret key from https://wakatime.com/settings.'
+      description: 'Your secret key from https://itimetrack.com/app/  General Settings.'
       type: 'string'
       default: ''
       order: 1
@@ -44,14 +44,14 @@ module.exports =
         type: 'string'
       order: 2
     showStatusBarIcon:
-      title: 'Show WakaTime in Atom status bar'
-      description: 'Add an icon to Atom\'s status bar with WakaTime info. Hovering over the icon shows current WakaTime status or error message.'
+      title: 'Show iTimeTrack in Atom status bar'
+      description: 'Add an icon to Atom\'s status bar with iTimeTrack info. Hovering over the icon shows current iTimeTrack status or error message.'
       type: 'boolean'
       default: true
       order: 3
 
   activate: (state) ->
-    packageVersion = atom.packages.getLoadedPackage('wakatime').metadata.version
+    packageVersion = atom.packages.getLoadedPackage('itimetrack').metadata.version
 
     if not isCLIInstalled()
       installCLI(->
@@ -65,37 +65,38 @@ module.exports =
           )
       )
     isPythonInstalled((installed) ->
+      console.log __dirname + path.sep + 'python'
       if not installed
         atom.confirm
-          message: 'WakaTime requires Python'
+          message: 'iTimeTrack requires Python'
           detailedMessage: 'Let\'s download and install Python now?'
           buttons:
             OK: -> installPython()
-            Cancel: -> window.alert('Please install Python (https://www.python.org/downloads/) and restart Atom to enable the WakaTime plugin.')
+            Cancel: -> window.alert('Please install Python (https://www.python.org/downloads/) and restart Atom to enable the iTimeTrack plugin.')
     )
     cleanupOnUninstall()
     setupEventHandlers()
     setApiKey()
     pluginReady = true
-    statusBarTileView?.setTitle('WakaTime initialized')
+    statusBarTileView?.setTitle('iTImeTrack initialized')
     statusBarTileView?.setStatus()
-    @settingChangedObserver = atom.config.observe 'wakatime', @settingChangedHandler
+    @settingChangedObserver = atom.config.observe 'itimetrack', @settingChangedHandler
 
   consumeStatusBar: (statusBar) ->
     statusBarTileView = new StatusBarTileView()
     statusBarTileView.init()
     @statusBarTile = statusBar?.addRightTile(item: statusBarTileView, priority: 300)
     if pluginReady
-      statusBarTileView.setTitle('WakaTime initialized')
+      statusBarTileView.setTitle('iTimeTrack initialized')
       statusBarTileView.setStatus()
-      if not atom.config.get 'wakatime.showStatusBarIcon'
+      if not atom.config.get 'itimetrack.showStatusBarIcon'
         statusBarTileView?.hide()
 
   deactivate: ->
     @statusBarTile?.destroy()
     statusBarTileView?.destroy()
     @settingChangedObserver?.dispose()
-  
+
   settingChangedHandler: (newValue) ->
     if newValue.showStatusBarIcon
       statusBarTileView?.show()
@@ -113,9 +114,9 @@ setApiKey = ->
       apiKey = key
 
 loadApiKey = (cb) ->
-  key = atom.config.get('wakatime.apikey')
+  key = atom.config.get('itimetrack.apikey')
   return cb(null, key) if key? && key.length > 0
-  wakatimeConfigFile = path.join getUserHome(), '.wakatime.cfg'
+  wakatimeConfigFile = path.join getUserHome(), '.itimetrack.cfg'
   fs.readFile wakatimeConfigFile, 'utf-8', (err, configContent) ->
     return cb(new Error('could not read wakatime config')) if err?
     wakatimeConfig = ini.parse configContent
@@ -133,7 +134,7 @@ cleanupOnUninstall = () ->
     unloadHandler.dispose()
     unloadHandler = null
   unloadHandler = atom.packages.onDidUnloadPackage((p) ->
-    if p? and p.name == 'wakatime'
+    if p? and p.name == 'itimetrack'
       removeCLI()
       if unloadHandler?
         unloadHandler.dispose()
@@ -252,7 +253,7 @@ isCLILatest = (callback) ->
   )
 
 getLatestCliVersion = (callback) ->
-  url = 'https://raw.githubusercontent.com/wakatime/wakatime/master/wakatime/__about__.py'
+  url = 'https://raw.githubusercontent.com/itimetrack/itimetrack/master/itimetrack/__about__.py'
   request.get(url, (error, response, body) ->
     version = null
     if !error and response.statusCode == 200
@@ -266,27 +267,27 @@ getLatestCliVersion = (callback) ->
   )
 
 cliLocation = () ->
-  dir = __dirname + path.sep + 'wakatime-master' + path.sep + 'wakatime' + path.sep + 'cli.py'
+  dir = __dirname + path.sep + 'itimetrack-master' + path.sep + 'wakatime' + path.sep + 'cli.py'
   return dir
 
 installCLI = (callback) ->
   console.log 'Downloading wakatime cli...'
-  url = 'https://github.com/wakatime/wakatime/archive/master.zip'
-  zipFile = __dirname + path.sep + 'wakatime-master.zip'
+  url = 'https://github.com/itimetrack/itimetrack/archive/master.zip'
+  zipFile = __dirname + path.sep + 'itimetrack-master.zip'
   downloadFile(url, zipFile, ->
     extractCLI(zipFile, callback)
   )
 
 extractCLI = (zipFile, callback) ->
-  console.log 'Extracting wakatime-master.zip file...'
+  console.log 'Extracting itimetrack-master.zip file...'
   removeCLI(->
     unzip(zipFile, __dirname, callback)
   )
 
 removeCLI = (callback) ->
-  if fs.existsSync(__dirname + path.sep + 'wakatime-master')
+  if fs.existsSync(__dirname + path.sep + 'itimetrack-master')
     try
-      rimraf(__dirname + path.sep + 'wakatime-master', ->
+      rimraf(__dirname + path.sep + 'itimetrack-master', ->
         if callback?
           callback()
       )
@@ -330,7 +331,7 @@ sendHeartbeat = (file, lineno, isWrite) ->
   if isWrite or enoughTimePassed(time) or lastFile isnt currentFile
     pythonLocation (python) ->
       return unless python? && apiKey?
-      args = [cliLocation(), '--file', currentFile, '--key', apiKey, '--plugin', 'atom-wakatime/' + packageVersion]
+      args = [cliLocation(), '--file', currentFile, '--key', apiKey, '--plugin', 'itimetrack-atom/' + packageVersion]
       if isWrite
         args.push('--write')
       if lineno?
@@ -357,7 +358,7 @@ sendHeartbeat = (file, lineno, isWrite) ->
             status = null
             title = 'WakaTime Offline, coding activity will sync when online.'
           else if proc.exitCode == 103
-            msg = 'An error occured while parsing ~/.wakatime.cfg. Check ~/.wakatime.log for more info.'
+            msg = 'An error occured while parsing ~/.itimetrack.cfg. Check ~/.itimetrack.log for more info.'
             status = 'Error'
             title = msg
           else if proc.exitCode == 104
@@ -367,7 +368,7 @@ sendHeartbeat = (file, lineno, isWrite) ->
           else
             msg = error
             status = 'Error'
-            title = 'Unknown Error (' + proc.exitCode + '); Check your Dev Console and ~/.wakatime.log for more info.'
+            title = 'Unknown Error (' + proc.exitCode + '); Check your Dev Console and ~/.itimetrack.log for more info.'
 
           console.warn msg
           statusBarTileView?.setStatus(status)
@@ -384,7 +385,7 @@ sendHeartbeat = (file, lineno, isWrite) ->
 fileIsIgnored = (file) ->
   if endsWith(file, 'COMMIT_EDITMSG') or endsWith(file, 'PULLREQ_EDITMSG') or endsWith(file, 'MERGE_MSG') or endsWith(file, 'TAG_EDITMSG')
     return true
-  patterns = atom.config.get('wakatime.ignore')
+  patterns = atom.config.get('itimetrack.ignore')
   ignore = false
   for pattern in patterns
     re = new RegExp(pattern, 'gi')

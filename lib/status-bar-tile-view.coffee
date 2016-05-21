@@ -10,7 +10,7 @@ class StatusBarTileView extends HTMLElement
 
     @link = document.createElement('a')
     @link.classList.add('inline-block')
-    @link.href = 'https://wakatime.com/'
+    @link.href = 'https://itimetrack.com/app/#!/login'
     @appendChild @link
 
     @icon = document.createElement('img')
