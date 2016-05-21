@@ -1,6 +1,6 @@
 {
   "name": "itimetrack",
-  "version": "5.0.8",
+  "version": "5.0.9",
   "description": "iTimeTrack is automated time tracking tool for programmers. Once the iTimeTrack plugin is installed, your billable time worked in files will be assigned to a project then a time-entry will be generated at https://itimetrack.com",
   "license": "BSD",
   "repository": "https://github.com/itimetrack/itimetrack-atom",
